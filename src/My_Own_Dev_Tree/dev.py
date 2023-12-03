@@ -1,6 +1,8 @@
 import argparse
 import ply.lex as lex
 import ply.yacc as yacc
+import xml.dom.minidom as md
+
 
 def removeDoubleQuotes(string):
     finalString = ''
@@ -134,19 +136,19 @@ def convertToXML(node):
         if node.children[0].type == "array":
             isArray = True
             node.children[0].value = node.value
-        if not isArray: string  += f"<{node.value}>\n"
+        if not isArray: string  += f"<{node.value}>"
         convertToXML(node.children[0])
-        if not isArray: string += f"</{node.value}>\n"
+        if not isArray: string += f"</{node.value}>"
 
     
     elif node.type == "array":        
         for child in node.children:
-            string += f"<{node.value}>\n"
+            string += f"<{node.value}>"
             convertToXML(child)
-            string += f"</{node.value}>\n"
+            string += f"</{node.value}>"
     
     elif node.type == "primitive":
-        string += f"{node.value}\n"
+        string += f"{node.value}"
     
 
         
@@ -164,14 +166,15 @@ if __name__ == "__main__":
     with open(args.filename) as ff:
         input_string = ff.read()
     result_ast = parse_json(input_string)
-    string = '<root>\n'
+    string = '<root>'
 
     convertToXML(result_ast)
-    string += '\n</root>'
+    string += '</root>'
     print("AST:")
     print_tree(result_ast)
-    
+    dom = md.parseString(string) # or xml.dom.minidom.parseString(xml_string)
+    pretty_xml_as_string = dom.toprettyxml()
     with open("someXMLFile.xml","w") as f:
-        f.write(string)
+        f.write(pretty_xml_as_string)
     print("Wrote to XML File")
 

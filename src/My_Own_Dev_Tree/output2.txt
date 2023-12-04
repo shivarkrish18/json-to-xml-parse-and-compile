@@ -1,0 +1,57 @@
+False
+Iteration 6
+Iteration 2
+Iteration 3
+Iteration 4
+Iteration 3
+Iteration 2
+Iteration 1
+Iteration 0
+Node name : None Value List: ['Interdimensional travel', 'Teleportation', 'Inferno', 'Heat Immunity', 'Immortality']
+[]
+
+Iteration 2
+Iteration 1
+Iteration 0
+Node name : None Value List: ['powers', 'secretIdentity', 'age', 'name']
+[]
+
+Iteration 1
+Iteration 3
+Iteration 2
+Iteration 1
+Iteration 0
+Node name : None Value List: ['Superhuman reflexes', 'Damage resistance', 'Million tonne punch']
+[]
+
+Iteration 2
+Iteration 1
+Iteration 0
+Node name : None Value List: ['powers', 'secretIdentity', 'age', 'name']
+[]
+
+Iteration 0
+Iteration 3
+Iteration 3
+Iteration 2
+Iteration 1
+Iteration 0
+Node name : None Value List: ['Radiation blast', 'Turning tiny', 'Radiation resistance']
+[2]
+
+Iteration 2
+Iteration 1
+Iteration 0
+Node name : None Value List: ['powers', 'secretIdentity', 'age', 'name']
+[]
+
+Iteration 5
+Iteration 4
+Iteration 3
+Iteration 2
+Iteration 1
+Iteration 0
+Node name : None Value List: ['members', 'secretBase', 'active', 'formed', 'homeTown', 'squadName']
+[3]
+
+Wrote to XML File

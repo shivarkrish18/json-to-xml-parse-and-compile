@@ -1,0 +1,23 @@
+True
+Node name : None Value List: ['Radiation resistance', 'Turning tiny', 'Radiation blast']
+[3]
+
+Node name : None Value List: ['name', 'age', 'secretIdentity', 'powers']
+[]
+
+Node name : None Value List: ['Million tonne punch', 'Damage resistance', 'Superhuman reflexes']
+[]
+
+Node name : None Value List: ['name', 'age', 'secretIdentity', 'powers']
+[]
+
+Node name : None Value List: ['Immortality', 'Heat Immunity', 'Inferno', 'Teleportation', 'Interdimensional travel']
+[]
+
+Node name : None Value List: ['name', 'age', 'secretIdentity', 'powers']
+[]
+
+Node name : None Value List: ['squadName', 'homeTown', 'formed', 'secretBase', 'active', 'members']
+[5]
+
+Wrote to XML File

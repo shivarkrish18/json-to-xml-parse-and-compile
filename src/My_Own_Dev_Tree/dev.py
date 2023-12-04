@@ -47,6 +47,9 @@ class TreeNode:
     def __init__(self, type, value=None, children=None):
         self.type = type
         self.value = value
+        self.isDuplicate = False
+        if type == 'array' or type == 'object':
+            self.removeChildren = []
         if value is not None:
             self.value = removeDoubleQuotes(value)
         self.children = children if children is not None else []
@@ -104,6 +107,57 @@ def p_error(p):
 lexer = lex.lex()
 parser = yacc.yacc()
 
+#Function for checking ambiguity in a given JSON AST
+def labelDuplicates(node, reversedFlag):        
+    if reversedFlag:
+        if node.type == "object" or node.type == "array":
+            valueList = []
+            for i in range(len(node.children)):
+                #print(f"Iteration {i}")
+                if node.children[i].type != 'object':
+                    if (node.children[i].value not in valueList):                
+                        valueList.append(node.children[i].value)
+                    else:                    
+                        node.removeChildren.append(i)
+                labelDuplicates(node.children[i], reversedFlag)            
+
+        elif node.type == "pair":               
+            labelDuplicates(node.children[0], reversedFlag)      
+        
+        elif node.type == "primitive":
+            return
+        
+    else:
+        if node.type == "object" or node.type == "array":
+            valueList = []
+            for i in range(len(node.children)-1,-1,-1):                
+                if node.children[i].type != 'object':
+                    if (node.children[i].value not in valueList):                
+                        valueList.append(node.children[i].value)
+                    else:                    
+                        node.removeChildren.append(i)
+                labelDuplicates(node.children[i], reversedFlag)
+
+        elif node.type == "pair":               
+            labelDuplicates(node.children[0], reversedFlag)      
+        
+        elif node.type == "primitive":
+            return
+    
+
+def makeDecision(node):
+    if node.type == "object" or node.type == "array":
+        if node.removeChildren != []:
+            for i in sorted(node.removeChildren, reverse = True):
+                del node.children[i]
+        for i in range(len(node.children)):
+            makeDecision(node.children[i])
+    elif node.type == "pair":               
+        makeDecision(node.children[0])
+    else:
+        pass
+
+
 def parse_json(input_string):
     lexer.input(input_string)
     ast = parser.parse(lexer=lexer)
@@ -121,7 +175,7 @@ def build_tree(node):
 
 def print_tree(node, level=0):
     indent = "  " * level
-    print(f"{indent}{node.type}: {node.value}")
+    print(f"{indent}{node.type}: {node.value}: {node.isDuplicate}")
     for child in node.children:
         print_tree(child, level + 1)
 
@@ -160,21 +214,39 @@ def convertToXML(node):
 
 if __name__ == "__main__":
     parsa = argparse.ArgumentParser(prog='JSON Tree Parser')
-    parsa.add_argument('-f', '--filename')
+    parsa.add_argument('-f', '--filename', help='Path to the input JSON File')
+    parsa.add_argument('-d', '--duplicateflag', help='True if first occurence has to be retained/False if last occurence has to be retained ')
     args = parsa.parse_args()
     input_string = ''
     with open(args.filename) as ff:
         input_string = ff.read()
     result_ast = parse_json(input_string)
-    string = '<root>'
+    #print("AST:")
+    #print_tree(result_ast)
+    #print(args.duplicateflag)
+    flag = True if args.duplicateflag == "True" else False
+    
+    print(flag)
+    labelDuplicates(result_ast, flag)
+    #print("AST after duplicate matching: ")
+    #print_tree(result_ast)
+    makeDecision(result_ast)
+    #print("AST after duplicate removal: ")
+    #print_tree(result_ast)
 
+    string = '<root>'
     convertToXML(result_ast)
     string += '</root>'
-    print("AST:")
-    print_tree(result_ast)
+
     dom = md.parseString(string) # or xml.dom.minidom.parseString(xml_string)
     pretty_xml_as_string = dom.toprettyxml()
-    with open("someXMLFile.xml","w") as f:
-        f.write(pretty_xml_as_string)
+    if flag:
+        with open("TrueXMLFile.xml","w") as f:
+            f.write(pretty_xml_as_string)
+    
+    else:
+        with open("FalseXMLFile.xml","w") as f:
+            f.write(pretty_xml_as_string)
+
     print("Wrote to XML File")
 
